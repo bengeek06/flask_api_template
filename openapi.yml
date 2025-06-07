@@ -1,0 +1,209 @@
+openapi: 3.0.3
+info:
+  title: Dummy API
+  version: '1.0'
+  description: API for managing dummy items.
+
+servers:
+  - url: http://localhost:5000/
+
+paths:
+  /dummies:
+    get:
+      summary: List all dummy items
+      responses:
+        '200':
+          description: List of dummy items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Dummy'
+    post:
+      summary: Create a new dummy item
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DummyCreate'
+      responses:
+        '201':
+          description: Dummy item created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dummy'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '500':
+          description: Database error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /dummies/{dummy_id}:
+    parameters:
+      - name: dummy_id
+        in: path
+        required: true
+        schema:
+          type: integer
+    get:
+      summary: Get a dummy item by ID
+      responses:
+        '200':
+          description: Dummy item found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dummy'
+        '404':
+          description: Dummy not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      summary: Replace a dummy item by ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DummyCreate'
+      responses:
+        '200':
+          description: Dummy item updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dummy'
+        '400':
+          description: Validation or integrity error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '404':
+          description: Dummy not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Database error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    patch:
+      summary: Partially update a dummy item by ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DummyUpdate'
+      responses:
+        '200':
+          description: Dummy item updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dummy'
+        '400':
+          description: Validation or integrity error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '404':
+          description: Dummy not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Database error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Delete a dummy item by ID
+      responses:
+        '204':
+          description: Dummy deleted successfully
+        '404':
+          description: Dummy not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Database error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    Dummy:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "Test Dummy"
+        description:
+          type: string
+          example: "A test dummy"
+    DummyCreate:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          example: "Test Dummy"
+        description:
+          type: string
+          example: "A test dummy"
+    DummyUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Updated Dummy"
+        description:
+          type: string
+          example: "Updated description"
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Dummy not found"
+        error:
+          type: string
+          example: "Integrity error"
+    ValidationError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Validation error"
+        errors:
+          type: object
+          additionalProperties: true
+          example: {"name": ["Name must be unique."]}
