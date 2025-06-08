@@ -35,6 +35,7 @@ target/
 
 # Environments
 .env
+.env.*
 .venv
 env/
 venv/

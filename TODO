@@ -2,3 +2,7 @@ LICENSE
 CODE_OF_CONDUCT
 config staging
 config production
+ajouter des endpoints 
+/config /version /import /export
+ajouter les decorateurs authentification et verification d'un id
+ajoputer support sentry dans le logger

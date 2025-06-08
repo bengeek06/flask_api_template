@@ -9,9 +9,9 @@ from marshmallow import ValidationError
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from flask_restful import Resource
 
-from .models import db, Dummy
-from .schemas import DummySchema
-from .logger import logger
+from app.models import db, Dummy
+from app.schemas import DummySchema
+from app.logger import logger
 
 
 dummy_schema = DummySchema(session=db.session)
