@@ -10,3 +10,4 @@ marshmallow-sqlalchemy
 pytest
 pytest-cov
 pylint
+pycodestyle

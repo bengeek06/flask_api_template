@@ -12,11 +12,10 @@ from flask import make_response
 from app.models import Dummy
 
 
-
 class ExportCSVResource(Resource):
     """
     Resource for exporting data to a CSV file.
-    
+
     Methods:
         get():
             Export data to a CSV file and return it as a response.
@@ -44,5 +43,6 @@ class ExportCSVResource(Resource):
         # Create response
         response = make_response(output.getvalue())
         response.headers['Content-Type'] = 'text/csv'
-        response.headers['Content-Disposition'] = 'attachment; filename=export.csv'
+        response.headers['Content-Disposition'] = (
+                'attachment; filename=export.csv')
         return response

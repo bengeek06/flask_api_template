@@ -13,7 +13,7 @@ from flask_restful import Resource
 class ConfigResource(Resource):
     """
     Resource for providing the application configuration.
-    
+
     Methods:
         get():
             Retrieve the current application configuration.
@@ -24,7 +24,8 @@ class ConfigResource(Resource):
         Retrieve the current application configuration.
 
         Returns:
-            dict: A dictionary containing the application configuration and HTTP status code 200.
+            dict: A dictionary containing the application configuration and
+            HTTP status code 200.
         """
         config = {
             "FLASK_ENV": os.getenv("FLASK_ENV"),
