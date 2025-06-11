@@ -1,0 +1,13 @@
+colorlog
+python-dotenv
+Flask
+flask-cors
+flask-marshmallow
+Flask-Migrate
+flask-restful
+Flask-SQLAlchemy
+marshmallow-sqlalchemy
+pytest
+pytest-cov
+pylint
+pycodestyle
