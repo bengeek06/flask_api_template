@@ -9,7 +9,7 @@ import io
 import csv
 from flask_restful import Resource
 from flask import make_response
-from app.models import Dummy
+from app.models.dummy import Dummy
 
 
 class ExportCSVResource(Resource):

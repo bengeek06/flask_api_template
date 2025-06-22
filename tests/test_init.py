@@ -55,7 +55,11 @@ def test_error_handler_400(client):
 
     response = client.get("/bad")
     assert response.status_code == 400
-    assert response.get_json() == {"message": "Bad request"}
+    data = response.get_json()
+    assert data["message"] == "Bad request"
+    assert data["path"] == "/bad"
+    assert data["method"] == "GET"
+    assert "request_id" in data
 
 
 def test_error_handler_500(client):
@@ -68,6 +72,47 @@ def test_error_handler_500(client):
     @client.application.route("/fail")
     def fail():
         raise Exception("fail!")
+
     response = client.get("/fail")
     assert response.status_code == 500
-    assert response.get_json() == {"message": "Internal server error"}
+    data = response.get_json()
+    assert data["message"] == "Internal server error"
+    assert data["path"] == "/fail"
+    assert data["method"] == "GET"
+    assert "request_id" in data
+
+def test_error_handler_401(client):
+    """
+    Test that a 401 Unauthorized error returns the correct JSON response.
+    """
+    from werkzeug.exceptions import Unauthorized
+
+    @client.application.route("/unauthorized")
+    def unauthorized():
+        raise Unauthorized()
+
+    response = client.get("/unauthorized")
+    assert response.status_code == 401
+    data = response.get_json()
+    assert data["message"] == "Unauthorized"
+    assert data["path"] == "/unauthorized"
+    assert data["method"] == "GET"
+    assert "request_id" in data
+
+def test_error_handler_403(client):
+    """
+    Test that a 403 Forbidden error returns the correct JSON response.
+    """
+    from werkzeug.exceptions import Forbidden
+
+    @client.application.route("/forbidden")
+    def forbidden():
+        raise Forbidden()
+
+    response = client.get("/forbidden")
+    assert response.status_code == 403
+    data = response.get_json()
+    assert data["message"] == "Forbidden"
+    assert data["path"] == "/forbidden"
+    assert data["method"] == "GET"
+    assert "request_id" in data
