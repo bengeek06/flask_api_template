@@ -1,6 +1,7 @@
 import json
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
-from app.models import Dummy, db
+from app.models import db
+from app.models.dummy import Dummy
 
 # Tests for POST /dummies endpoint
 

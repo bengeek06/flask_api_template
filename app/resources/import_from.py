@@ -11,8 +11,9 @@ from flask import request
 from flask_restful import Resource
 from marshmallow import ValidationError
 from sqlalchemy.exc import SQLAlchemyError
-from app.models import Dummy, db
-from app.schemas import DummySchema
+from app.models import db
+from app.models.dummy import Dummy
+from app.schemas.dummy_schema import DummySchema
 from app.logger import logging
 
 dummy_schema = DummySchema(session=db.session)

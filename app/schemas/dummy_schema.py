@@ -11,7 +11,7 @@ Classes:
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from marshmallow import ValidationError, validates
 
-from .models import Dummy
+from app.models.dummy import Dummy
 
 
 class DummySchema(SQLAlchemyAutoSchema):

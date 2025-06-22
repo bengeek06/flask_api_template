@@ -9,8 +9,9 @@ from marshmallow import ValidationError
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from flask_restful import Resource
 
-from app.models import db, Dummy
-from app.schemas import DummySchema
+from app.models import db
+from app.models.dummy import Dummy
+from app.schemas.dummy_schema import DummySchema
 from app.logger import logger
 
 
