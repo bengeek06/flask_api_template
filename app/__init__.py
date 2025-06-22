@@ -18,7 +18,7 @@ Functions:
 """
 
 import os
-from flask import Flask
+from flask import Flask, request, g
 from flask_migrate import Migrate
 from flask_marshmallow import Marshmallow
 
@@ -51,20 +51,92 @@ def register_error_handlers(app):
     Args:
         app (Flask): The Flask application instance.
     """
+    @app.errorhandler(401)
+    def unauthorized(_):
+        """Handler for 401 (unauthorized) errors."""
+        logger.warning(
+            "Unauthorized access attempt detected.",
+            path=request.path,
+            method=request.method,
+            request_id=getattr(g, "request_id", None)
+        )
+        response = {
+            "message": "Unauthorized",
+            "path": request.path,
+            "method": request.method,
+            "request_id": getattr(g, "request_id", None)
+        }
+        return response, 401
+
+    @app.errorhandler(403)
+    def forbidden(_):
+        """Handler for 403 (forbidden) errors."""
+        logger.warning(
+            "Forbidden access attempt detected.",
+            path=request.path,
+            method=request.method,
+            request_id=getattr(g, "request_id", None)
+        )
+        response = {
+            "message": "Forbidden",
+            "path": request.path,
+            "method": request.method,
+            "request_id": getattr(g, "request_id", None)
+        }
+        return response, 403
+
     @app.errorhandler(404)
     def not_found(_):
         """Handler for 404 (resource not found) errors."""
-        return {"message": "Resource not found"}, 404
-
-    @app.errorhandler(500)
-    def internal_error(_):
-        """Handler for 500 (internal server) errors."""
-        return {"message": "Internal server error"}, 500
+        logger.warning(
+            "Resource not found.",
+            path=request.path,
+            method=request.method,
+            request_id=getattr(g, "request_id", None)
+        )
+        response = {
+            "message": "Resource not found",
+            "path": request.path,
+            "method": request.method,
+            "request_id": getattr(g, "request_id", None)
+        }
+        return response, 404
 
     @app.errorhandler(400)
     def bad_request(_):
         """Handler for 400 (bad request) errors."""
-        return {"message": "Bad request"}, 400
+        logger.warning(
+            "Bad request received.",
+            path=request.path,
+            method=request.method,
+            request_id=getattr(g, "request_id", None)
+        )
+        response = {
+            "message": "Bad request",
+            "path": request.path,
+            "method": request.method,
+            "request_id": getattr(g, "request_id", None)
+        }
+        return response, 400
+
+    @app.errorhandler(500)
+    def internal_error(e):
+        logger.error(
+            "Internal server error",
+            exc_info=True,
+            path=request.path,
+            method=request.method,
+            request_id=getattr(g, "request_id", None)
+        )
+        response = {
+            "message": "Internal server error",
+            "path": request.path,
+            "method": request.method,
+            "request_id": getattr(g, "request_id", None)
+        }
+        if app.config.get("DEBUG"):
+            response["exception"] = str(e)
+        return response, 500
 
     logger.info("Error handlers registered successfully.")
 
