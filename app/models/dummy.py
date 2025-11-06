@@ -4,6 +4,7 @@ models.py
 
 This module defines the SQLAlchemy database models for the application.
 """
+
 from app.models.db import db
 
 
@@ -16,7 +17,8 @@ class Dummy(db.Model):
         name (str): Name of the Dummy entity.
         description (str): Description of the Dummy entity.
     """
-    __tablename__ = 'dummy'
+
+    __tablename__ = "dummy"
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
@@ -49,7 +51,7 @@ class Dummy(db.Model):
         Returns:
             Dummy: The Dummy object with the given ID, or None if not found.
         """
-        return cls.query.get(dummy_id)
+        return db.session.get(cls, dummy_id)
 
     @classmethod
     def get_by_name(cls, name):

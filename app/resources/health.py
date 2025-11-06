@@ -89,9 +89,18 @@ class HealthResource(Resource):
                 "message": "Database query returned unexpected result",
             }
 
-        except Exception as e:
+        except OSError as e:
             logger.error(f"Database health check failed: {str(e)}")
             return {
                 "healthy": False,
                 "message": f"Database connection failed: {str(e)}",
+            }
+        except (
+            db.session.bind.dialect.dbapi.Error,
+            db.session.bind.dialect.dbapi.DatabaseError,
+        ) as e:
+            logger.error(f"Database health check failed: {str(e)}")
+            return {
+                "healthy": False,
+                "message": f"Database query failed: {str(e)}",
             }

@@ -4,6 +4,7 @@ resources.py
 This module defines the resources for managing dummy items in the application.
 It includes endpoints for creating, retrieving, updating, and deleting dummy.
 """
+
 from flask import request
 from marshmallow import ValidationError
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
@@ -30,6 +31,7 @@ class DummyListResource(Resource):
         post():
             Create a new dummy item with the provided data.
     """
+
     @require_jwt_auth()
     @check_access_required("list")
     def get(self):
@@ -70,8 +72,8 @@ class DummyListResource(Resource):
 
         try:
             dummy = Dummy.create(
-                name=json_data['name'],
-                description=json_data.get('description')
+                name=json_data["name"],
+                description=json_data.get("description"),
             )
         except IntegrityError as e:
             db.session.rollback()
@@ -159,8 +161,8 @@ class DummyResource(Resource):
 
         try:
             dummy.update(
-                name=json_data['name'],
-                description=json_data.get('description')
+                name=json_data["name"],
+                description=json_data.get("description"),
             )
         except IntegrityError as e:
             db.session.rollback()
@@ -207,10 +209,10 @@ class DummyResource(Resource):
             return {"message": "Dummy item not found"}, 404
 
         update_kwargs = {}
-        if 'name' in json_data:
-            update_kwargs['name'] = json_data['name']
-        if 'description' in json_data:
-            update_kwargs['description'] = json_data.get('description')
+        if "name" in json_data:
+            update_kwargs["name"] = json_data["name"]
+        if "description" in json_data:
+            update_kwargs["description"] = json_data.get("description")
         try:
             dummy.update(**update_kwargs)
         except IntegrityError as e:
