@@ -4,7 +4,7 @@ models.py
 
 This module defines the SQLAlchemy database models for the application.
 """
-from app.models import db
+from app.models.db import db
 
 
 class Dummy(db.Model):

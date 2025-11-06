@@ -5,9 +5,27 @@ version.py
 This module defines the VersionResource for exposing the current API version
 through a REST endpoint.
 """
-from flask_restful import Resource
 
-API_VERSION = "1.0.0"
+import os
+from flask_restful import Resource
+from app.utils import require_jwt_auth, check_access_required
+
+
+def _read_version():
+    """Read version from VERSION file."""
+    version_file_path = os.path.join(
+        os.path.dirname(__file__), "..", "..", "VERSION"
+    )
+    try:
+        with open(version_file_path, "r", encoding="utf-8") as f:
+            return f.read().strip()
+    except FileNotFoundError:
+        return "unknown"
+    except (OSError, UnicodeDecodeError):
+        return "unknown"
+
+
+API_VERSION = _read_version()
 
 
 class VersionResource(Resource):
@@ -19,6 +37,8 @@ class VersionResource(Resource):
             Retrieve the current API version.
     """
 
+    @check_access_required("list")
+    @require_jwt_auth()
     def get(self):
         """
         Retrieve the current API version.

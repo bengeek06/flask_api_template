@@ -9,11 +9,11 @@ from marshmallow import ValidationError
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from flask_restful import Resource
 
-from app.models import db
+from app.models.db import db
 from app.models.dummy import Dummy
 from app.schemas.dummy_schema import DummySchema
 from app.logger import logger
-
+from app.utils import require_jwt_auth, check_access_required
 
 dummy_schema = DummySchema(session=db.session)
 dummy_schemas = DummySchema(session=db.session, many=True)
@@ -30,7 +30,8 @@ class DummyListResource(Resource):
         post():
             Create a new dummy item with the provided data.
     """
-
+    @require_jwt_auth()
+    @check_access_required("list")
     def get(self):
         """
         Retrieve all dummy items.
@@ -44,6 +45,8 @@ class DummyListResource(Resource):
         dummy = Dummy.get_all()
         return dummy_schemas.dump(dummy), 200
 
+    @require_jwt_auth()
+    @check_access_required("create")
     def post(self):
         """
         Create a new dummy item.
@@ -100,6 +103,8 @@ class DummyResource(Resource):
             Delete a dummy item by its ID.
     """
 
+    @require_jwt_auth()
+    @check_access_required("read")
     def get(self, dummy_id):
         """
         Retrieve a dummy item by its ID.
@@ -120,6 +125,8 @@ class DummyResource(Resource):
 
         return dummy_schema.dump(dummy), 200
 
+    @require_jwt_auth()
+    @check_access_required("update")
     def put(self, dummy_id):
         """
         Update a dummy item by replacing all fields.
@@ -166,6 +173,8 @@ class DummyResource(Resource):
 
         return dummy_schema.dump(dummy), 200
 
+    @require_jwt_auth()
+    @check_access_required("update")
     def patch(self, dummy_id):
         """
         Partially update a dummy item.
@@ -215,6 +224,8 @@ class DummyResource(Resource):
 
         return dummy_schema.dump(dummy), 200
 
+    @require_jwt_auth()
+    @check_access_required("delete")
     def delete(self, dummy_id):
         """
         Delete a dummy item by its ID.
