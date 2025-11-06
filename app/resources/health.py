@@ -9,6 +9,7 @@ import os
 from datetime import datetime, timezone
 from flask_restful import Resource
 from sqlalchemy import text
+from sqlalchemy.exc import SQLAlchemyError
 from app.logger import logger
 from app.models.db import db
 from app.resources.version import API_VERSION
@@ -89,18 +90,9 @@ class HealthResource(Resource):
                 "message": "Database query returned unexpected result",
             }
 
-        except OSError as e:
+        except (OSError, SQLAlchemyError) as e:
             logger.error(f"Database health check failed: {str(e)}")
             return {
                 "healthy": False,
                 "message": f"Database connection failed: {str(e)}",
-            }
-        except (
-            db.session.bind.dialect.dbapi.Error,
-            db.session.bind.dialect.dbapi.DatabaseError,
-        ) as e:
-            logger.error(f"Database health check failed: {str(e)}")
-            return {
-                "healthy": False,
-                "message": f"Database query failed: {str(e)}",
             }
