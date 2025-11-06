@@ -5,13 +5,13 @@ Routes for the Flask application.
 # This module is responsible for registering the routes of the REST API
 # and linking them to the corresponding resources.
 """
+
 from flask_restful import Api
 from app.logger import logger
 from app.resources.dummy import DummyResource, DummyListResource
 from app.resources.version import VersionResource
 from app.resources.config import ConfigResource
-from app.resources.export_to import ExportCSVResource
-from app.resources.import_from import ImportCSVResource, ImportJSONResource
+from app.resources.health import HealthResource
 
 
 def register_routes(app):
@@ -27,13 +27,11 @@ def register_routes(app):
     """
     api = Api(app)
 
-    api.add_resource(DummyListResource, '/dummies')
-    api.add_resource(DummyResource, '/dummies/<int:dummy_id>')
-    api.add_resource(ExportCSVResource, '/export/csv')
-    api.add_resource(ImportCSVResource, '/import/csv')
-    api.add_resource(ImportJSONResource, '/import/json')
+    api.add_resource(DummyListResource, "/dummies")
+    api.add_resource(DummyResource, "/dummies/<int:dummy_id>")
 
-    api.add_resource(VersionResource, '/version')
-    api.add_resource(ConfigResource, '/config')
+    api.add_resource(VersionResource, "/version")
+    api.add_resource(ConfigResource, "/config")
+    api.add_resource(HealthResource, "/health")
 
     logger.info("Routes registered successfully.")

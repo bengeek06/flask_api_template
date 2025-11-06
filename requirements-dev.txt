@@ -1,13 +1,6 @@
-colorlog
-structlog
-python-dotenv
-Flask
-flask-cors
-flask-marshmallow
-Flask-Migrate
-flask-restful
-Flask-SQLAlchemy
-marshmallow-sqlalchemy
+dotenv
+black
+flake8
 pytest
 pytest-cov
 pylint

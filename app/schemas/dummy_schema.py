@@ -8,6 +8,7 @@ the application's data models.
 Classes:
     - DummySchema: Schema for serializing and validating Dummy model instances.
 """
+
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from marshmallow import ValidationError, validates
 
@@ -23,6 +24,7 @@ class DummySchema(SQLAlchemyAutoSchema):
         name (str): Name of the Dummy entity.
         description (str): Description of the Dummy entity.
     """
+
     class Meta:
         """
         Meta options for the Dummy schema.
@@ -33,12 +35,13 @@ class DummySchema(SQLAlchemyAutoSchema):
             include_fk: Whether to include foreign keys.
             dump_only: Fields that are only used for serialization.
         """
+
         model = Dummy
         load_instance = True
         include_fk = True
-        dump_only = ('id',)
+        dump_only = ("id",)
 
-    @validates('name')
+    @validates("name")
     def validate_name(self, value, **kwargs):
         """
         Validate that the name is not empty and is unique.
@@ -61,7 +64,7 @@ class DummySchema(SQLAlchemyAutoSchema):
             raise ValidationError("Name must be unique.")
         return value
 
-    @validates('description')
+    @validates("description")
     def validate_description(self, value, **kwargs):
         """
         Validate that the description does not exceed 200 characters.

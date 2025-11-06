@@ -1,6 +1,10 @@
 """
-This module initializes the SQLAlchemy instance for the Flask application.
-"""
-from flask_sqlalchemy import SQLAlchemy
+app.models
+----------
 
-db = SQLAlchemy()
+This module exports the models.
+"""
+
+from app.models.dummy import Dummy
+
+__all__ = ["Dummy"]
