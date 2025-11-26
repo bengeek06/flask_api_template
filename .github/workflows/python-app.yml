@@ -2,7 +2,7 @@ name: Flask service
 
 on:
   push:
-    branches: [ main, guardian_staging ]
+    branches: [ main, staging, develop ]
   pull_request:
     branches: [ "main" ]
 
