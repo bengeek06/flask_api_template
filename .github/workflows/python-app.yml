@@ -37,4 +37,5 @@ jobs:
       run: |
         echo "DATABASE_URL=sqlite:///:memory:" > .env.test
         echo "JWT_SECRET=test-jwt-secret-key" >> .env.test
+        echo "USE_GUARDIAN_SERVICE=False" >> .env.test
         FLASK_ENV=testing pytest
