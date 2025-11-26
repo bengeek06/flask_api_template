@@ -42,7 +42,7 @@ def app():  # pylint: disable=redefined-outer-name
 
 
 @fixture
-def client(app):
+def client(app):  # pylint: disable=redefined-outer-name
     """
     Fixture to create a test client for the Flask application.
     """
@@ -50,7 +50,7 @@ def client(app):
 
 
 @fixture
-def session(app):
+def session(app):  # pylint: disable=redefined-outer-name
     """
     Fixture to provide a database session for integration tests.
     """

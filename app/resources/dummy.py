@@ -18,6 +18,11 @@ from flask_restful import Resource
 from marshmallow import ValidationError
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
+from app.constants import (ERROR_DATABASE, ERROR_DATABASE_LOG, ERROR_INTEGRITY,
+                           ERROR_INTEGRITY_LOG, ERROR_VALIDATION,
+                           ERROR_VALIDATION_LOG, LOG_DUMMY_ITEM_NOT_FOUND,
+                           LOG_DUMMY_NOT_FOUND, MSG_DUMMY_DELETED,
+                           MSG_DUMMY_ITEM_NOT_FOUND, MSG_DUMMY_NOT_FOUND)
 from app.logger import logger
 from app.models.db import db
 from app.models.dummy import Dummy
@@ -75,8 +80,8 @@ class DummyListResource(Resource):
         try:
             dummy_schema.load(json_data)
         except ValidationError as err:
-            logger.error("Validation error: %s", err.messages)
-            return {"message": "Validation error", "errors": err.messages}, 400
+            logger.error(ERROR_VALIDATION_LOG, err.messages)
+            return {"message": ERROR_VALIDATION, "errors": err.messages}, 400
 
         try:
             dummy = Dummy.create(
@@ -85,12 +90,12 @@ class DummyListResource(Resource):
             )
         except IntegrityError as e:
             db.session.rollback()
-            logger.error("Integrity error: %s", str(e))
-            return {"message": "Integrity error", "error": str(e)}, 400
+            logger.error(ERROR_INTEGRITY_LOG, str(e))
+            return {"message": ERROR_INTEGRITY, "error": str(e)}, 400
         except SQLAlchemyError as e:
             db.session.rollback()
-            logger.error("Database error: %s", str(e))
-            return {"message": "Database error", "error": str(e)}, 500
+            logger.error(ERROR_DATABASE_LOG, str(e))
+            return {"message": ERROR_DATABASE, "error": str(e)}, 500
 
         return dummy_schema.dump(dummy), 201
 
@@ -130,8 +135,8 @@ class DummyResource(Resource):
 
         dummy = Dummy.get_by_id(dummy_id)
         if not dummy:
-            logger.warning("Dummy with ID %s not found", dummy_id)
-            return {"message": "Dummy not found"}, 404
+            logger.warning(LOG_DUMMY_NOT_FOUND, dummy_id)
+            return {"message": MSG_DUMMY_NOT_FOUND}, 404
 
         return dummy_schema.dump(dummy), 200
 
@@ -159,13 +164,13 @@ class DummyResource(Resource):
         try:
             dummy_schema.load(json_data)
         except ValidationError as err:
-            logger.error("Validation error: %s", err.messages)
-            return {"message": "Validation error", "errors": err.messages}, 400
+            logger.error(ERROR_VALIDATION_LOG, err.messages)
+            return {"message": ERROR_VALIDATION, "errors": err.messages}, 400
 
         dummy = Dummy.get_by_id(dummy_id)
         if not dummy:
-            logger.warning("Dummy with ID %s not found", dummy_id)
-            return {"message": "Dummy not found"}, 404
+            logger.warning(LOG_DUMMY_NOT_FOUND, dummy_id)
+            return {"message": MSG_DUMMY_NOT_FOUND}, 404
 
         try:
             dummy.update(
@@ -174,12 +179,12 @@ class DummyResource(Resource):
             )
         except IntegrityError as e:
             db.session.rollback()
-            logger.error("Integrity error: %s", str(e))
-            return {"message": "Integrity error", "error": str(e)}, 400
+            logger.error(ERROR_INTEGRITY_LOG, str(e))
+            return {"message": ERROR_INTEGRITY, "error": str(e)}, 400
         except SQLAlchemyError as e:
             db.session.rollback()
-            logger.error("Database error: %s", str(e))
-            return {"message": "Database error", "error": str(e)}, 500
+            logger.error(ERROR_DATABASE_LOG, str(e))
+            return {"message": ERROR_DATABASE, "error": str(e)}, 500
 
         return dummy_schema.dump(dummy), 200
 
@@ -208,13 +213,13 @@ class DummyResource(Resource):
         try:
             dummy_schema.load(json_data, partial=True)
         except ValidationError as err:
-            logger.error("Validation error: %s", err.messages)
-            return {"message": "Validation error", "errors": err.messages}, 400
+            logger.error(ERROR_VALIDATION_LOG, err.messages)
+            return {"message": ERROR_VALIDATION, "errors": err.messages}, 400
 
         dummy = Dummy.get_by_id(dummy_id)
         if not dummy:
-            logger.warning("Dummy item with ID %s not found", dummy_id)
-            return {"message": "Dummy item not found"}, 404
+            logger.warning(LOG_DUMMY_ITEM_NOT_FOUND, dummy_id)
+            return {"message": MSG_DUMMY_ITEM_NOT_FOUND}, 404
 
         update_kwargs = {}
         if "name" in json_data:
@@ -225,12 +230,12 @@ class DummyResource(Resource):
             dummy.update(**update_kwargs)
         except IntegrityError as e:
             db.session.rollback()
-            logger.error("Integrity error: %s", str(e))
-            return {"message": "Integrity error", "error": str(e)}, 400
+            logger.error(ERROR_INTEGRITY_LOG, str(e))
+            return {"message": ERROR_INTEGRITY, "error": str(e)}, 400
         except SQLAlchemyError as e:
             db.session.rollback()
-            logger.error("Database error: %s", str(e))
-            return {"message": "Database error", "error": str(e)}, 500
+            logger.error(ERROR_DATABASE_LOG, str(e))
+            return {"message": ERROR_DATABASE, "error": str(e)}, 500
 
         return dummy_schema.dump(dummy), 200
 
@@ -251,14 +256,14 @@ class DummyResource(Resource):
 
         dummy = Dummy.get_by_id(dummy_id)
         if not dummy:
-            logger.warning("Dummy with ID %s not found", dummy_id)
-            return {"message": "Dummy not found"}, 404
+            logger.warning(LOG_DUMMY_NOT_FOUND, dummy_id)
+            return {"message": MSG_DUMMY_NOT_FOUND}, 404
 
         try:
             dummy.delete()
         except SQLAlchemyError as e:
             db.session.rollback()
-            logger.error("Database error: %s", str(e))
-            return {"message": "Database error", "error": str(e)}, 500
+            logger.error(ERROR_DATABASE_LOG, str(e))
+            return {"message": ERROR_DATABASE, "error": str(e)}, 500
 
-        return {"message": "Dummy deleted successfully"}, 204
+        return {"message": MSG_DUMMY_DELETED}, 204

@@ -28,6 +28,12 @@ import os
 
 from dotenv import load_dotenv
 
+from app.constants import (BOOLEAN_TRUE_VALUES, DEFAULT_GUARDIAN_TIMEOUT,
+                           DEFAULT_LOG_LEVEL, DEFAULT_USE_GUARDIAN,
+                           ERROR_DATABASE_URL_NOT_SET,
+                           ERROR_GUARDIAN_URL_REQUIRED,
+                           ERROR_JWT_SECRET_NOT_SET)
+
 # Load .env file ONLY if not running in Docker
 # This hook ensures environment variables are loaded for flask commands
 if not os.environ.get("IN_DOCKER_CONTAINER") and not os.environ.get(
@@ -50,25 +56,24 @@ class Config:  # pylint: disable=too-few-public-methods
     # JWT Configuration
     JWT_SECRET = os.environ.get("JWT_SECRET")
     if not JWT_SECRET:
-        raise ValueError("JWT_SECRET environment variable is not set.")
+        raise ValueError(ERROR_JWT_SECRET_NOT_SET)
 
     # Guardian Service Configuration
-    USE_GUARDIAN_SERVICE = os.environ.get(
-        "USE_GUARDIAN_SERVICE", "true"
-    ).lower() in ("true", "yes", "1")
+    USE_GUARDIAN_SERVICE = (
+        os.environ.get("USE_GUARDIAN_SERVICE", DEFAULT_USE_GUARDIAN).lower()
+        in BOOLEAN_TRUE_VALUES
+    )
     GUARDIAN_SERVICE_URL = os.environ.get("GUARDIAN_SERVICE_URL")
     GUARDIAN_SERVICE_TIMEOUT = float(
-        os.environ.get("GUARDIAN_SERVICE_TIMEOUT", "5")
+        os.environ.get("GUARDIAN_SERVICE_TIMEOUT", DEFAULT_GUARDIAN_TIMEOUT)
     )
 
     # Validate GUARDIAN_SERVICE_URL if Guardian is enabled
     if USE_GUARDIAN_SERVICE and not GUARDIAN_SERVICE_URL:
-        raise ValueError(
-            "GUARDIAN_SERVICE_URL is required when USE_GUARDIAN_SERVICE is enabled."
-        )
+        raise ValueError(ERROR_GUARDIAN_URL_REQUIRED)
 
     # Logging Configuration
-    LOG_LEVEL = os.environ.get("LOG_LEVEL", "INFO").upper()
+    LOG_LEVEL = os.environ.get("LOG_LEVEL", DEFAULT_LOG_LEVEL).upper()
 
 
 class DevelopmentConfig(Config):  # pylint: disable=too-few-public-methods
@@ -77,7 +82,7 @@ class DevelopmentConfig(Config):  # pylint: disable=too-few-public-methods
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL")
     if not SQLALCHEMY_DATABASE_URI:
-        raise ValueError("DATABASE_URL environment variable is not set.")
+        raise ValueError(ERROR_DATABASE_URL_NOT_SET)
 
 
 class TestingConfig(Config):  # pylint: disable=too-few-public-methods
@@ -86,7 +91,7 @@ class TestingConfig(Config):  # pylint: disable=too-few-public-methods
     TESTING = True
     SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL")
     if not SQLALCHEMY_DATABASE_URI:
-        raise ValueError("DATABASE_URL environment variable is not set.")
+        raise ValueError(ERROR_DATABASE_URL_NOT_SET)
 
 
 class StagingConfig(Config):  # pylint: disable=too-few-public-methods
@@ -95,7 +100,7 @@ class StagingConfig(Config):  # pylint: disable=too-few-public-methods
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL")
     if not SQLALCHEMY_DATABASE_URI:
-        raise ValueError("DATABASE_URL environment variable is not set.")
+        raise ValueError(ERROR_DATABASE_URL_NOT_SET)
 
 
 class ProductionConfig(Config):  # pylint: disable=too-few-public-methods
@@ -104,4 +109,4 @@ class ProductionConfig(Config):  # pylint: disable=too-few-public-methods
     DEBUG = False
     SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL")
     if not SQLALCHEMY_DATABASE_URI:
-        raise ValueError("DATABASE_URL environment variable is not set.")
+        raise ValueError(ERROR_DATABASE_URL_NOT_SET)
