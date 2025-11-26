@@ -2,7 +2,7 @@ name: Build and Publish Docker Image
 
 on:
   push:
-    branches: [ main, fix_issues ]
+    branches: [ main, staging, develop ]
     paths:
       - "Dockerfile"
       - "**/*.py"

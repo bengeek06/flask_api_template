@@ -1,3 +1,11 @@
+# Copyright (c) 2025 Waterfall
+#
+# This source code is dual-licensed under:
+# - GNU Affero General Public License v3.0 (AGPLv3) for open source use
+# - Commercial License for proprietary use
+#
+# See LICENSE and LICENSE.md files in the root directory for full license text.
+# For commercial licensing inquiries, contact: benjamin@waterfall-project.pro
 """
 routes.py
 -----------
@@ -7,11 +15,12 @@ Routes for the Flask application.
 """
 
 from flask_restful import Api
+
 from app.logger import logger
-from app.resources.dummy import DummyResource, DummyListResource
-from app.resources.version import VersionResource
 from app.resources.config import ConfigResource
+from app.resources.dummy import DummyListResource, DummyResource
 from app.resources.health import HealthResource
+from app.resources.version import VersionResource
 
 
 def register_routes(app):

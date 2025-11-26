@@ -39,10 +39,18 @@ security:
 components:
   securitySchemes:
     JWTAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-      description: JWT token passed via HTTP-only cookies for authentication and authorization
+      type: apiKey
+      in: cookie
+      name: access_token
+      description: |
+        JWT authentication using HTTP-only cookie.
+        
+        The `access_token` cookie contains a JWT with the following claims:
+        - `user_id`: Unique identifier of the authenticated user
+        - `company_id`: Unique identifier of the user's company (for multi-tenancy)
+        
+        The cookie is automatically sent by the browser with each request.
+        It is configured as HTTP-only for security (not accessible via JavaScript).
 
   schemas:
 

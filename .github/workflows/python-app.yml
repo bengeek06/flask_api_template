@@ -2,7 +2,7 @@ name: Flask service
 
 on:
   push:
-    branches: [ main, guardian_staging ]
+    branches: [ main, staging, develop ]
   pull_request:
     branches: [ "main" ]
 
@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.10",  "3.11",  "3.12", "3.13"]
+        python-version: ["3.11",  "3.12", "3.13"]
 
     steps:
     - uses: actions/checkout@v4
@@ -37,4 +37,5 @@ jobs:
       run: |
         echo "DATABASE_URL=sqlite:///:memory:" > .env.test
         echo "JWT_SECRET=test-jwt-secret-key" >> .env.test
+        echo "USE_GUARDIAN_SERVICE=False" >> .env.test
         FLASK_ENV=testing pytest

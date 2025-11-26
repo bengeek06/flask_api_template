@@ -1,3 +1,11 @@
+# Copyright (c) 2025 Waterfall
+#
+# This source code is dual-licensed under:
+# - GNU Affero General Public License v3.0 (AGPLv3) for open source use
+# - Commercial License for proprietary use
+#
+# See LICENSE and LICENSE.md files in the root directory for full license text.
+# For commercial licensing inquiries, contact: benjamin@waterfall-project.pro
 """
 test_health.py
 --------------
@@ -5,11 +13,12 @@ Tests for the health check endpoint.
 """
 
 import json
-from time import sleep
-import threading
 import logging
-from unittest.mock import patch, MagicMock
+import threading
 from datetime import datetime
+from time import sleep
+from unittest.mock import MagicMock, patch
+
 from sqlalchemy.exc import SQLAlchemyError
 
 
