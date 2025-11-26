@@ -1,3 +1,11 @@
+# Copyright (c) 2025 Waterfall
+#
+# This source code is dual-licensed under:
+# - GNU Affero General Public License v3.0 (AGPLv3) for open source use
+# - Commercial License for proprietary use
+#
+# See LICENSE and LICENSE.md files in the root directory for full license text.
+# For commercial licensing inquiries, contact: benjamin@waterfall-project.pro
 """
 config.py
 ---------
@@ -17,6 +25,7 @@ debug mode, and SQLAlchemy modification tracking.
 """
 
 import os
+
 from dotenv import load_dotenv
 
 # Load .env file ONLY if not running in Docker
@@ -33,14 +42,36 @@ if not os.environ.get("IN_DOCKER_CONTAINER") and not os.environ.get(
         load_dotenv(".env")
 
 
-class Config:
+class Config:  # pylint: disable=too-few-public-methods
     """Base configuration common to all environments."""
 
-    SECRET_KEY = os.environ.get("SECRET_KEY", "dev")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+    # JWT Configuration
+    JWT_SECRET = os.environ.get("JWT_SECRET")
+    if not JWT_SECRET:
+        raise ValueError("JWT_SECRET environment variable is not set.")
 
-class DevelopmentConfig(Config):
+    # Guardian Service Configuration
+    USE_GUARDIAN_SERVICE = os.environ.get(
+        "USE_GUARDIAN_SERVICE", "true"
+    ).lower() in ("true", "yes", "1")
+    GUARDIAN_SERVICE_URL = os.environ.get("GUARDIAN_SERVICE_URL")
+    GUARDIAN_SERVICE_TIMEOUT = float(
+        os.environ.get("GUARDIAN_SERVICE_TIMEOUT", "5")
+    )
+
+    # Validate GUARDIAN_SERVICE_URL if Guardian is enabled
+    if USE_GUARDIAN_SERVICE and not GUARDIAN_SERVICE_URL:
+        raise ValueError(
+            "GUARDIAN_SERVICE_URL is required when USE_GUARDIAN_SERVICE is enabled."
+        )
+
+    # Logging Configuration
+    LOG_LEVEL = os.environ.get("LOG_LEVEL", "INFO").upper()
+
+
+class DevelopmentConfig(Config):  # pylint: disable=too-few-public-methods
     """Configuration for the development environment."""
 
     DEBUG = True
@@ -49,7 +80,7 @@ class DevelopmentConfig(Config):
         raise ValueError("DATABASE_URL environment variable is not set.")
 
 
-class TestingConfig(Config):
+class TestingConfig(Config):  # pylint: disable=too-few-public-methods
     """Configuration for the testing environment."""
 
     TESTING = True
@@ -58,7 +89,7 @@ class TestingConfig(Config):
         raise ValueError("DATABASE_URL environment variable is not set.")
 
 
-class StagingConfig(Config):
+class StagingConfig(Config):  # pylint: disable=too-few-public-methods
     """Configuration for the staging environment."""
 
     DEBUG = True
@@ -67,7 +98,7 @@ class StagingConfig(Config):
         raise ValueError("DATABASE_URL environment variable is not set.")
 
 
-class ProductionConfig(Config):
+class ProductionConfig(Config):  # pylint: disable=too-few-public-methods
     """Configuration for the production environment."""
 
     DEBUG = False

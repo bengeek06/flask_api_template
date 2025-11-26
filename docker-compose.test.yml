@@ -1,0 +1,32 @@
+services:
+  guardian-service:
+    # Guardian Service - Authorization and access control
+    build:
+      context: ${GUARDIAN_SERVICE_PATH:-../guardian_service}
+      dockerfile: Dockerfile
+    container_name: identity-integration-guardian
+    ports:
+      - "5002:5000"
+    environment:
+      FLASK_ENV: development
+      LOG_LEVEL: DEBUG
+      # Use temp file DB - persists across Flask reloader restarts
+      # Cleaned by scripts/run-integration-tests.sh before each run
+      DATABASE_URL: "sqlite:////tmp/guardian_test.db"
+      JWT_SECRET: integration-test-secret-key
+      # Docker-specific flags
+      IN_DOCKER_CONTAINER: "1"
+      WAIT_FOR_DB: "false"
+      RUN_MIGRATIONS: "true"
+      APP_MODE: "development"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000/health').read()"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - integration-network
+
+networks:
+  integration-network:
+    driver: bridge

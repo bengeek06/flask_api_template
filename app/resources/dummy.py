@@ -1,3 +1,11 @@
+# Copyright (c) 2025 Waterfall
+#
+# This source code is dual-licensed under:
+# - GNU Affero General Public License v3.0 (AGPLv3) for open source use
+# - Commercial License for proprietary use
+#
+# See LICENSE and LICENSE.md files in the root directory for full license text.
+# For commercial licensing inquiries, contact: benjamin@waterfall-project.pro
 """
 resources.py
 -----------
@@ -6,15 +14,15 @@ It includes endpoints for creating, retrieving, updating, and deleting dummy.
 """
 
 from flask import request
+from flask_restful import Resource
 from marshmallow import ValidationError
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
-from flask_restful import Resource
 
+from app.logger import logger
 from app.models.db import db
 from app.models.dummy import Dummy
 from app.schemas.dummy_schema import DummySchema
-from app.logger import logger
-from app.utils import require_jwt_auth, check_access_required
+from app.utils import check_access_required, require_jwt_auth
 
 dummy_schema = DummySchema(session=db.session)
 dummy_schemas = DummySchema(session=db.session, many=True)

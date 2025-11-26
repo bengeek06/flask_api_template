@@ -1,9 +1,21 @@
+# Copyright (c) 2025 Waterfall
+#
+# This source code is dual-licensed under:
+# - GNU Affero General Public License v3.0 (AGPLv3) for open source use
+# - Commercial License for proprietary use
+#
+# See LICENSE and LICENSE.md files in the root directory for full license text.
+# For commercial licensing inquiries, contact: benjamin@waterfall-project.pro
+"""
+Tests for API endpoints.
+"""
 import json
 import uuid
-from sqlalchemy.exc import IntegrityError, SQLAlchemyError
-from app.models.dummy import Dummy
 
-from tests.conftest import create_jwt_token
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
+
+from app.models.dummy import Dummy
+from tests.unit.conftest import create_jwt_token
 
 # Tests for POST /dummies endpoint
 
@@ -103,6 +115,7 @@ def test_create_long_description(client):
 
 
 def test_creater_integrity_error(client, monkeypatch):
+    """Test creating a dummy with IntegrityError."""
     company_id = str(uuid.uuid4())
     user_id = str(uuid.uuid4())
     token = create_jwt_token(company_id, user_id)
@@ -120,6 +133,7 @@ def test_creater_integrity_error(client, monkeypatch):
 
 
 def test_create_sqlalchemy_error(client, monkeypatch):
+    """Test creating a dummy with SQLAlchemyError."""
     company_id = str(uuid.uuid4())
     user_id = str(uuid.uuid4())
     token = create_jwt_token(company_id, user_id)
@@ -266,6 +280,7 @@ def test_update_dummy_validation_error(client, session):
 
 
 def test_update_integrity_error(client, session, monkeypatch):
+    """Test updating a dummy with IntegrityError."""
     company_id = str(uuid.uuid4())
     user_id = str(uuid.uuid4())
     token = create_jwt_token(company_id, user_id)
@@ -289,6 +304,7 @@ def test_update_integrity_error(client, session, monkeypatch):
 
 
 def test_update_sqlalchemy_error(client, session, monkeypatch):
+    """Test updating a dummy with SQLAlchemyError."""
     company_id = str(uuid.uuid4())
     user_id = str(uuid.uuid4())
     token = create_jwt_token(company_id, user_id)
@@ -379,6 +395,7 @@ def test_partial_update_dummy_validation_error(client, session):
 
 
 def test_partial_update_integrity_error(client, session, monkeypatch):
+    """Test partially updating a dummy with IntegrityError."""
     company_id = str(uuid.uuid4())
     user_id = str(uuid.uuid4())
     token = create_jwt_token(company_id, user_id)
@@ -402,6 +419,7 @@ def test_partial_update_integrity_error(client, session, monkeypatch):
 
 
 def test_partial_update_sqlalchemy_error(client, session, monkeypatch):
+    """Test partially updating a dummy with SQLAlchemyError."""
     company_id = str(uuid.uuid4())
     user_id = str(uuid.uuid4())
     token = create_jwt_token(company_id, user_id)
@@ -469,6 +487,7 @@ def test_delete_dummy_not_found(client):
 
 
 def test_delete_sqlalchemy_error(client, session, monkeypatch):
+    """Test deleting a dummy with SQLAlchemyError."""
     company_id = str(uuid.uuid4())
     user_id = str(uuid.uuid4())
     token = create_jwt_token(company_id, user_id)

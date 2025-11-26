@@ -50,6 +50,33 @@ You can use `env.example` as a template for your environment files.
 
 ---
 
+## Environment Variables
+
+The application requires the following environment variables:
+
+### Required Variables
+
+- **JWT_SECRET**: Secret key for JWT token encoding/decoding (required)
+- **DATABASE_URL**: Database connection string (required)
+
+### Guardian Service Configuration
+
+- **USE_GUARDIAN_SERVICE**: Enable/disable Guardian access control service (default: `true`)  
+  Accepted values: `true`, `yes`, `1` (case-insensitive) for enabled, anything else for disabled
+- **GUARDIAN_SERVICE_URL**: URL of the Guardian service (required if `USE_GUARDIAN_SERVICE=true`)
+- **GUARDIAN_SERVICE_TIMEOUT**: Timeout in seconds for Guardian requests (default: `5`)
+
+### Optional Variables
+
+- **LOG_LEVEL**: Logging level (default: `INFO`)  
+  Accepted values: `DEBUG`, `INFO`, `WARNING`, `ERROR`, `CRITICAL`
+- **FLASK_ENV**: Flask environment (default: `development`)  
+  Accepted values: `development`, `testing`, `staging`, `production`
+
+**Note**: If `USE_GUARDIAN_SERVICE=true`, the `GUARDIAN_SERVICE_URL` must be set, otherwise the application will fail to start with a `ValueError`.
+
+---
+
 ## API Endpoints
 
 The main endpoints are:

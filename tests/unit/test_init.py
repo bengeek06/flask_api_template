@@ -1,3 +1,11 @@
+# Copyright (c) 2025 Waterfall
+#
+# This source code is dual-licensed under:
+# - GNU Affero General Public License v3.0 (AGPLv3) for open source use
+# - Commercial License for proprietary use
+#
+# See LICENSE and LICENSE.md files in the root directory for full license text.
+# For commercial licensing inquiries, contact: benjamin@waterfall-project.pro
 """
 test_init.py
 ------------
@@ -7,6 +15,8 @@ and the main run logic is invoked properly.
 """
 
 from flask import Flask
+from werkzeug.exceptions import BadRequest, Forbidden, Unauthorized
+
 import app
 
 
@@ -16,7 +26,7 @@ def test_main_runs(monkeypatch):
     """
     called = {}
 
-    def fake_run(self, debug):
+    def fake_run(self, debug=False):  # pylint: disable=unused-argument
         called["run"] = True
         called["debug"] = debug
 
@@ -48,7 +58,6 @@ def test_error_handler_400(client):
     """
     Test that a 400 Bad Request error returns the correct JSON response.
     """
-    from werkzeug.exceptions import BadRequest
 
     @client.application.route("/bad")
     def bad():
@@ -72,7 +81,7 @@ def test_error_handler_500(client):
 
     @client.application.route("/fail")
     def fail():
-        raise Exception("fail!")
+        raise RuntimeError("fail!")
 
     response = client.get("/fail")
     assert response.status_code == 500
@@ -87,7 +96,6 @@ def test_error_handler_401(client):
     """
     Test that a 401 Unauthorized error returns the correct JSON response.
     """
-    from werkzeug.exceptions import Unauthorized
 
     @client.application.route("/unauthorized")
     def unauthorized():
@@ -106,7 +114,6 @@ def test_error_handler_403(client):
     """
     Test that a 403 Forbidden error returns the correct JSON response.
     """
-    from werkzeug.exceptions import Forbidden
 
     @client.application.route("/forbidden")
     def forbidden():

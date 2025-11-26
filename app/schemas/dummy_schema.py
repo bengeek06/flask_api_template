@@ -1,3 +1,11 @@
+# Copyright (c) 2025 Waterfall
+#
+# This source code is dual-licensed under:
+# - GNU Affero General Public License v3.0 (AGPLv3) for open source use
+# - Commercial License for proprietary use
+#
+# See LICENSE and LICENSE.md files in the root directory for full license text.
+# For commercial licensing inquiries, contact: benjamin@waterfall-project.pro
 """
 schemas.py
 ----------
@@ -9,8 +17,8 @@ Classes:
     - DummySchema: Schema for serializing and validating Dummy model instances.
 """
 
-from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from marshmallow import ValidationError, validates
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 
 from app.models.dummy import Dummy
 
@@ -25,7 +33,7 @@ class DummySchema(SQLAlchemyAutoSchema):
         description (str): Description of the Dummy entity.
     """
 
-    class Meta:
+    class Meta:  # pylint: disable=too-few-public-methods
         """
         Meta options for the Dummy schema.
 
